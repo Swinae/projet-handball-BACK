@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id             Int           @id @default(autoincrement())
+  firstname      String?       @db.VarChar(100)
+  lastname       String?       @db.VarChar(100)
+  email          String        @unique @db.VarChar(150)
+  password       String?       @db.VarChar(200)
+  phone_number   String?       @db.VarChar(20)
+  role           UserRoleEnum? @default(SUPPORTER)
+  avatar         String?       @db.VarChar(150)
+  description    String?       @db.Text
+  last_connected DateTime      @default(now())
+  refreshToken   String?       @db.VarChar(200)
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @default(now())
+
+  news             News[]             @relation("admin_news")
+  users_post       User_Position[]    @relation("player_users")
+  donation         Donation[]         @relation("donation_users")
+  event            Event[]            @relation("event_users")
+  teamComp         Team_Comp[]        @relation("teamComp_users")
+  player_supporter Player_Supporter[] @relation("playerSupporter_Users")
+  playerSupporter  Player_Supporter[] @relation("playerSupporrter_UsersBis")
+}
+
+model News {
+  id         Int      @id @default(autoincrement())
+  title      String   @db.VarChar(200)
+  content    String   @db.Text
+  img        String?  @db.VarChar(150)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  creator_id Int
+
+  creator Users @relation("admin_news", fields: [creator_id], references: [id])
+}
+
+model Position {
+  id            Int             @id @default(autoincrement())
+  position_name PlayerPositionEnum @unique
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @default(now()) @updatedAt
+
+  poste    User_Position[] @relation("poste_position")
+  teamComp Team_Comp[]
+}
+
+model Donation {
+  id             Int               @id @default(autoincrement())
+  amount         Int               @db.MediumInt
+  date           DateTime          @default(now())
+  payment_method PaymentMethodEnum
+  status         PaymentStatusEnum
+  created_at     DateTime          @default(now())
+  updated_at     DateTime          @default(now()) @updatedAt
+  supporter_id   Int
+
+  supporter Users @relation("donation_users", fields: [supporter_id], references: [id])
+}
+
+model Event {
+  id         Int        @id @default(autoincrement())
+  type       EventTypeEnum
+  title      String     @db.VarChar(200)
+  content    String     @db.Text
+  adress     String     @db.VarChar(200)
+  img        String?    @db.VarChar(150)
+  start_time DateTime
+  end_time   DateTime
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  creator_id Int
+  match_id   Int
+
+  creator Users  @relation("event_users", fields: [creator_id], references: [id])
+  match   Match? @relation(fields: [match_id], references: [id])
+}
+
+model Match {
+  id            Int          @id
+  is_home       Boolean      @default(true)
+  score_home    Int          @default(0) @db.TinyInt
+  score_visitor Int          @default(0) @db.TinyInt
+  rival_team    String
+  result        matchResultEnum ?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @default(now())
+
+  teamComp Team_Comp[] @relation("teamComp")
+  event    Event[]
+}
+
+model TeamInfo {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(200)
+  logo       String?  @db.VarChar(150)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+}
+
+//////////////////////////// join tables ///////////////////
+
+model User_Position {
+  player_id  Int
+  poste_id   Int
+  status     StatusPlayers?
+  created_at DateTime       @default(now())
+  updated_at DateTime       @default(now())
+
+  //define foreign key
+  player Users    @relation("player_users", fields: [player_id], references: [id])
+  poste  Position @relation("poste_position", fields: [poste_id], references: [id])
+
+  //define two fields as primary key
+  @@id([player_id, poste_id])
+}
+
+model Player_Supporter {
+  supporter_id Int
+  player_id    Int
+  created_at   DateTime @default(now())
+
+  supporter Users @relation("playerSupporter_Users", fields: [supporter_id], references: [id])
+  player    Users @relation("playerSupporrter_UsersBis", fields: [player_id], references: [id])
+
+  @@id([supporter_id, player_id])
+}
+
+model Team_Comp {
+  match_id    Int
+  creator_id  Int
+  position_id Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  match   Match    @relation("teamComp", fields: [match_id], references: [id])
+  creator Users    @relation("teamComp_users", fields: [creator_id], references: [id])
+  poste   Position @relation(fields: [position_id], references: [id])
+
+  @@id([match_id, creator_id, position_id])
+}
+
+enum UserRoleEnum {
+  SUPPORTER
+  ADMIN
+  PLAYER
+}
+
+enum EventTypeEnum {
+  MATCH
+  ENTRAINEMENT
+  APERO
+}
+
+enum PlayerPositionEnum {
+  Gardien
+  Arriere_G
+  Arriere_D
+  Demi_centres
+  Aillier_G
+  Aillier_D
+  Pivot
+}
+
+enum PaymentStatusEnum {
+  VALID
+  DECLINED
+  PENDING
+}
+
+enum PaymentMethodEnum {
+  CB
+  VIREMENT
+}
+
+enum StatusPlayers {
+  Titulaire
+  Remplacant
+}
+
+enum matchResultEnum {
+  WIN
+  DRAW
+  LOSE
+}
