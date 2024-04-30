@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { SignUpAuthDto } from './dto/signUp-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { ResfreshTokenGuard } from './guards/RefreshTokenGuard';
+import { ResfreshTokenGuard } from '../guards/RefreshTokenGuard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 import { Users } from '@prisma/client';
 
