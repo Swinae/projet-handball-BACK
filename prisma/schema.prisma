@@ -78,7 +78,7 @@ model Event {
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now())
   creator_id Int
-  match_id   Int
+  match_id   Int?
 
   creator Users  @relation("event_users", fields: [creator_id], references: [id])
   match   Match? @relation(fields: [match_id], references: [id])

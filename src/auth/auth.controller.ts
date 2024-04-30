@@ -56,7 +56,6 @@ export class AuthController {
         }
     }
 
-
     private async __createAndUpdateTokens(id: number, role: string) {
         // Create tokens
         const token = await this.authService.createToken({ sub: id, role: role }, process.env.SECRET_KEY, process.env.TOKEN_DURATION)
