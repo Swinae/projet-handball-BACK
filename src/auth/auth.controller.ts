@@ -1,16 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UserService } from 'src/user/user.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { SignUpAuthDto } from './dto/signUp-auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService, private readonly userService: UserService) { }
 
     @Post('signup')
-    async create(@Body() body: CreateUserDto) {
+    async signup(@Body() body: SignUpAuthDto) {
         try {
             // Check if user exist in DB
             const foundUser = await this.userService.findByEmail(body.email)
@@ -24,18 +23,49 @@ export class AuthController {
             body.password = await this.authService.hashPassword(body.password)
             const newUser = await this.userService.create(body)
 
-            // Create tokens
-            const token = await this.authService.createToken({ sub: newUser.id, role: newUser.role }, process.env.SECRET_KEY, process.env.TOKEN_DURATION)
-            const refreshToken = await this.authService.createToken({ sub: newUser.id, role: newUser.role }, process.env.SECRET_REFRESH_KEY, process.env.REFRESH_TOKEN_DURATION)
-
-            // Add refresh token to DB
-            const user = this.authService.updateRefreshToken(newUser.id, refreshToken)
-
-            // Return info to the front
-            return { user, token, refreshToken }
+            // Create and update tokens
+            return this.__createAndUpdateTokens(newUser.id, newUser.role)
 
         } catch (error) {
-            return error
+            throw error
         }
+    }
+
+
+    @Post('login')
+    async login(@Body() body: LoginAuthDto) {
+        try {
+            // Check if user exist in DB
+            const foundUser = await this.userService.findByEmail(body.email)
+
+            // If user mail not in DB, throw an error
+            if (!foundUser) {
+                throw new HttpException('Email does not correspond to an existing account', HttpStatus.FORBIDDEN)
+            }
+
+            // If passwords don't match, throw an error
+            if (!await this.authService.comparePwd(body.password, foundUser.password)) {
+                throw new HttpException('Wrong password', HttpStatus.FORBIDDEN)
+            }
+
+            // Create and update tokens
+            return this.__createAndUpdateTokens(foundUser.id, foundUser.role)
+
+        } catch (error) {
+            throw error
+        }
+    }
+
+
+    private async __createAndUpdateTokens(id: number, role: string) {
+        // Create tokens
+        const token = await this.authService.createToken({ sub: id, role: role }, process.env.SECRET_KEY, process.env.TOKEN_DURATION)
+        const refreshToken = await this.authService.createToken({ sub: id, role: role }, process.env.SECRET_REFRESH_KEY, process.env.REFRESH_TOKEN_DURATION)
+
+        // Add refresh token to DB
+        const user = this.authService.updateRefreshToken(id, refreshToken)
+
+        // Return info to the front
+        return { user, token, refreshToken }
     }
 }

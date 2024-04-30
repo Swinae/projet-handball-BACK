@@ -27,4 +27,8 @@ export class AuthService {
             }
         })
     }
+
+    async comparePwd(pwd: string, hashedPwd: string): Promise<Boolean> {
+        return await bcrypt.compare(pwd, hashedPwd)
+    }
 }
