@@ -13,4 +13,17 @@ export class NewsService {
   async create(NewsToCreate: CreateNewsDto,  admin_id: any): Promise<News> {
     return await this.prisma.news.create({ data: { ...NewsToCreate, creator_id:  admin_id } });
   }
+
+  async findAll(): Promise<News[]> {
+    return await this.prisma.news.findMany();
+  }
+
+  async findOneNews(id: number): Promise<News> {
+    return await this.prisma.news.findUnique({
+      where: {
+        id
+      }
+    });
+  }
+
 }
