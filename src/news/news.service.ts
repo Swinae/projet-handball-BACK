@@ -14,6 +14,18 @@ export class NewsService {
     return await this.prisma.news.create({ data: { ...NewsToCreate, creator_id:  admin_id } });
   }
 
+  async update1News(id: number, newsToUpdateDto: UpdateNewsDto): Promise<News> {
+    return await this.prisma.news.update({
+      where: {
+        id
+      },
+      data: {
+        ...newsToUpdateDto,
+        updated_at: new Date().toISOString()
+      }
+    });
+  }
+
   async deleteOneNews(id: number){
     return await this.prisma.news.delete({where: {id}})
   }

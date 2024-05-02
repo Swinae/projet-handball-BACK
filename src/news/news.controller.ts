@@ -5,6 +5,7 @@ import { News } from '@prisma/client';
 import { AdminAuthGuard } from 'src/guards/Admin-auth.guard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 import { Public } from 'src/customsDecorators/publicDecorator';
+import { UpdateNewsDto } from './dto/update-news.dto';
 
 @UseGuards(AdminAuthGuard)
 @Controller('news')
@@ -22,6 +23,16 @@ export class NewsController {
     }
     catch (error) {
       throw new HttpException('Actualité non crée !', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Put('update/id/:news_id')
+  async update(@Param('news_id') news_id: string, @Body() newsToUpdate: UpdateNewsDto): Promise<News> {
+    try {
+      return await this.newsService.update1News(+news_id, newsToUpdate);
+    }
+    catch (error) {
+      throw new HttpException('Echec de la modification', HttpStatus.BAD_REQUEST);
     }
   }
 
