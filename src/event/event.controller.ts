@@ -14,7 +14,7 @@ export class EventController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<Event[]> {
     return this.eventService.findAll();
   }
 
@@ -29,7 +29,7 @@ export class EventController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventService.remove(+id);
+  remove(@Param('id') id: number): Promise<Event> {
+    return this.eventService.delete(id);
   }
 }
