@@ -14,6 +14,21 @@ export class NewsService {
     return await this.prisma.news.create({ data: { ...NewsToCreate, creator_id:  admin_id } });
   }
 
+  async deleteOneNews(id: number){
+    return await this.prisma.news.delete({where: {id}})
+  }
+  
+  async deleteAllNews() {
+    const response = await this.prisma.news.deleteMany();
+    
+    // reinitialize auto-incrémentation de l'ID
+    await this.prisma.$queryRaw`ALTER TABLE News AUTO_INCREMENT = 1`;
+    
+    console.log('La table news a été réinitialisée avec succès.');
+    
+    return response
+  }
+
   async findAll(): Promise<News[]> {
     return await this.prisma.news.findMany();
   }
