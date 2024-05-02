@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:5.7.40
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: default
+      MYSQL_PASSWORD: mysqlpass
+      MYSQL_ROOT_PASSWORD: mysqlpass
+      MYSQL_USER: mysqluser
+    volumes:
+      - formation_mysql_db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - 8099:80
+
+volumes:
+  formation_mysql_db:
