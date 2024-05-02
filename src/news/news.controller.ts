@@ -69,14 +69,14 @@ export class NewsController {
 
   @Public()
   @Get('list')
-  async findAll(): Promise<News[] | HttpStatus> {
+  async findAll(): Promise<News[] | {HttpStatut: HttpStatus, message:string}> {
     try {
       const newsList = await this.newsService.findAll(); //console.log(newsList);
       if (newsList.length != 0) {
         return newsList;
       }
       else {
-        return HttpStatus.NO_CONTENT;
+        return {HttpStatut:HttpStatus.NO_CONTENT, message: "Aucun contenu" };
       }
     }
     catch (error) {
