@@ -15,8 +15,8 @@ export class EventService {
         return this.prisma.event.create({data})
     }
 
-    findAll() {
-        return `This action returns all event`;
+    async findAll():Promise<Event[]> {
+        return this.prisma.event.findMany()
     }
 
     findOne(id: number) {
@@ -27,7 +27,11 @@ export class EventService {
         return `This action updates a #${id} event`;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} event`;
+    async delete(id: number): Promise<Event> {
+        return this.prisma.event.delete({
+            where: {
+                id
+            }
+        });
     }
 }
