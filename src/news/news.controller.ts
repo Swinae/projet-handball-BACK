@@ -36,19 +36,6 @@ export class NewsController {
     }
   }
 
-  @Delete('delete/:news_id')
-  async delelete1News(@Param('news_id') news_id: string) {
-    try {
-      const newsDeleted = await this.newsService.deleteOneNews(+news_id);
-      if (newsDeleted) {
-        return HttpStatus.NO_CONTENT;
-      }
-    }
-    catch (error) {
-      throw new HttpException('News not deleted',HttpStatus.BAD_REQUEST)
-    }
-  }
-
   @Delete('delete/all')
   async deleteAll() {
     try {
@@ -66,6 +53,20 @@ export class NewsController {
       })
     }
   }
+  
+  @Delete('delete/:news_id')
+  async delelete1News(@Param('news_id') news_id: string) {
+    try {
+      const newsDeleted = await this.newsService.deleteOneNews(+news_id);
+      if (newsDeleted) {
+        return HttpStatus.NO_CONTENT;
+      }
+    }
+    catch (error) {
+      throw new HttpException('News not deleted',HttpStatus.BAD_REQUEST)
+    }
+  }
+
 
   @Public()
   @Get('list')
