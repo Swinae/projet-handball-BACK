@@ -53,7 +53,7 @@ export class NewsController {
       })
     }
   }
-  
+
   @Delete('delete/:news_id')
   async delelete1News(@Param('news_id') news_id: string) {
     try {
@@ -63,21 +63,21 @@ export class NewsController {
       }
     }
     catch (error) {
-      throw new HttpException('News not deleted',HttpStatus.BAD_REQUEST)
+      throw new HttpException('News not deleted', HttpStatus.BAD_REQUEST)
     }
   }
 
 
   @Public()
   @Get('list')
-  async findAll(): Promise<News[] | {HttpStatut: HttpStatus, message:string}> {
+  async findAll(): Promise<News[] | { HttpStatut: HttpStatus, message: string }> {
     try {
       const newsList = await this.newsService.findAll(); //console.log(newsList);
       if (newsList.length != 0) {
         return newsList;
       }
       else {
-        return {HttpStatut:HttpStatus.NO_CONTENT, message: "Aucun contenu" };
+        return { HttpStatut: HttpStatus.NO_CONTENT, message: "Aucun contenu" };
       }
     }
     catch (error) {
@@ -89,8 +89,8 @@ export class NewsController {
   @Get('id/:news_id')
   async findOneNews(@Param('news_id') news_id: string): Promise<News | HttpStatus> {
     try {
-      const newsFound = await this.newsService.findOneNews(+news_id);      
-      if(newsFound === null){
+      const newsFound = await this.newsService.findOneNews(+news_id);
+      if (newsFound === null) {
         return HttpStatus.NOT_FOUND;
       }
       return newsFound;
