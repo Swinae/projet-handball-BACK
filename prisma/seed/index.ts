@@ -16,39 +16,39 @@ const roles: UserRoleEnum[] = ["ADMIN", "SUPPORTER", "PLAYER"];
 let usersQty = 20;
 
 const main = async () => {
-    while (usersQty) {
-        //generate a random index
-        const randomRoleIndex = Math.floor(Math.random() * roles.length);
+  while (usersQty) {
+    //generate a random index
+    const randomRoleIndex = Math.floor(Math.random() * roles.length);
 
-        const randomRole = roles[randomRoleIndex];
+    const randomRole = roles[randomRoleIndex];
 
-        //generate a random password
-        const password = await authService.hashPassword(faker.internet.password());
+    //generate a random password
+    const password = await authService.hashPassword(faker.internet.password());
 
-        await prisma.users.create({
-            data: {
-                firstname: faker.person.firstName(),
-                lastname: faker.person.lastName(),
-                email: faker.internet.email(),
-                password: password,
-                phone_number: faker.phone.number(),
-                role: randomRole,
-                avatar: faker.internet.url(),
-                description: faker.lorem.paragraph(2),
-            }
-        });
+    await prisma.users.create({
+      data: {
+        firstname: faker.person.firstName(),
+        lastname: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: password,
+        phone_number: faker.phone.number(),
+        role: randomRole,
+        avatar: faker.internet.url(),
+        description: faker.lorem.paragraph(2),
+      }
+    });
 
-        usersQty--
-    }
-    console.log("Seed completed successfully.");
+    usersQty--
+  }
+  console.log("Seed completed successfully.");
 }
 
 main()
-    .then(async () => {
-        await prisma.$disconnect()
-    })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })

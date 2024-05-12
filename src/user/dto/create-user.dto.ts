@@ -1,4 +1,3 @@
-import { UserRoleEnum } from "@prisma/client";
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 
 export class CreateUserDto {

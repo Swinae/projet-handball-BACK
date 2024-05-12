@@ -24,7 +24,7 @@ export class AuthController {
 
       // Sinon, on créé le user
       body.password = await this.authService.hashPassword(body.password)
-      const newUser = await this.userService.create(body)
+      const newUser = await this.userService.createSupporter(body)
 
       // Create and update tokens
       return this.__createAndUpdateTokens(newUser.id, newUser.role)
