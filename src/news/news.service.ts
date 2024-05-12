@@ -18,7 +18,7 @@ export class NewsService {
     //assign id value of type number to newsUpdateDto 
     newsToUpdateDto ? newsToUpdateDto.id = id : null;
     
-    console.log("newsToUpdate: ", newsToUpdateDto);
+    //console.log("newsToUpdate: ", newsToUpdateDto);
     return await this.prisma.news.update({
       where: {
         id
