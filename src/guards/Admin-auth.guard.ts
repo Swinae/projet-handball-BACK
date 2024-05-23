@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/customsDecorators/publicDecorator';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 @Injectable()
 export class AdminAuthGuard implements CanActivate {
@@ -19,14 +20,14 @@ export class AdminAuthGuard implements CanActivate {
       context.getClass(),
     ]);
     if (isPublic) {
-    
+
       // 💡 See this condition 
       return true;
     }
 
     const request = context.switchToHttp().getRequest(); //console.log("request: ",request);
     const token = this.extractTokenFromHeader(request);
-    
+
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -44,11 +45,15 @@ export class AdminAuthGuard implements CanActivate {
       request['user_id'] = payload.sub;
 
       //check payload.role === ADMIN
-      if(payload.role !== "ADMIN"){
+      if (payload.role !== "ADMIN") {
         throw new UnauthorizedException();
       }
 
-    } catch {
+    }
+    catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException("Token expired");
+      }
       throw new UnauthorizedException();
     }
     return true;
@@ -56,7 +61,7 @@ export class AdminAuthGuard implements CanActivate {
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    console.log("type: ",type, " token: ",token)
+    console.log("type: ", type, " token: ", token)
     return type === 'Bearer' ? token : undefined;
   }
 }
