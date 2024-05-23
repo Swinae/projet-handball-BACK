@@ -55,7 +55,7 @@ export class NewsController {
   }
 
   @Delete('delete/:news_id')
-  async delelete1News(@Param('news_id') news_id: string) {
+  async delelete1News(@Param('news_id') news_id: string): Promise <HttpStatus> {
     try {
       const newsDeleted = await this.newsService.deleteOneNews(+news_id);
       if (newsDeleted) {

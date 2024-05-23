@@ -9,7 +9,7 @@ export class AuthService {
 
   constructor(private readonly jwtService: JwtService, private readonly prisma: PrismaService) { }
 
-  async hashPassword(password: string) {
+  async hashPassword(password: string) :Promise<string> {
     return bcrypt.hash(password, 10)
   }
 

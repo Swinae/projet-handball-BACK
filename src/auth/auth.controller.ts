@@ -22,8 +22,10 @@ export class AuthController {
         throw new HttpException('Email already exist', HttpStatus.FORBIDDEN)
       }
 
-      // Sinon, on créé le user
+      // Sinon, on hash le password
       body.password = await this.authService.hashPassword(body.password)
+
+      //on créé le user
       const newUser = await this.userService.createSupporter(body)
 
       // Create and update tokens
@@ -35,7 +37,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: LoginAuthDto) {
+  async login(@Body() body: LoginAuthDto): Promise<{ user: object, token: string, refreshToken: string }> {
     try {
       // Check if user exist in DB
       const foundUser = await this.userService.findByEmail(body.email)
@@ -88,7 +90,7 @@ export class AuthController {
     // Add refresh token to DB
     const user = await this.authService.updateRefreshToken(id, refreshToken)
 
-    // Return info to the front
+    // Return into to the front
     return { user, token, refreshToken }
   }
 }
