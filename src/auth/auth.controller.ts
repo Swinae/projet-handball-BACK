@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { SignUpAuthDto } from './dto/signUp-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { RefreshGuard } from './guards/refresh.guard';
+import { RequestWithUser } from 'src/utils/interfaces/requests.interface';
+import { Users } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -40,12 +43,12 @@ export class AuthController {
 
             // If user mail not in DB, throw an error
             if (!foundUser) {
-                throw new HttpException('Email does not correspond to an existing account', HttpStatus.FORBIDDEN)
+                throw new HttpException('Bad Credentials', HttpStatus.FORBIDDEN)
             }
 
             // If passwords don't match, throw an error
             if (!await this.authService.comparePwd(body.password, foundUser.password)) {
-                throw new HttpException('Wrong password', HttpStatus.FORBIDDEN)
+                throw new HttpException('Bad Credentials', HttpStatus.FORBIDDEN)
             }
 
             // Create and update tokens
@@ -54,6 +57,19 @@ export class AuthController {
         } catch (error) {
             throw error
         }
+    }
+
+
+    @Post('refreshToken')
+    @UseGuards(RefreshGuard)
+    async refreshToken(@Req() req: RequestWithUser) {
+        const user: Users = await this.userService.findById(req.user.sub) // sub = id du user dans le payload de la request (Cf fonction __createAndUpdatedTokens)
+        
+        if (user.refreshToken !== req.refreshToken) {
+            throw new HttpException('Token expired', HttpStatus.FORBIDDEN)
+        }
+
+        return this.__createAndUpdateTokens(user.id, user.role)
     }
 
     private async __createAndUpdateTokens(id: number, role: string) {

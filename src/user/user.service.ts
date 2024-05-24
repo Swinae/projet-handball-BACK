@@ -17,10 +17,18 @@ export class UserService {
         return `This action returns all user`;
     }
 
-    findByEmail(email: string) {
+    findByEmail(email: string): Promise<Users> {
         return this.prisma.users.findUnique({
             where: {
                 email
+            }
+        });
+    }
+
+    findById(id: number): Promise<Users> {
+        return this.prisma.users.findUnique({
+            where: {
+                id
             }
         });
     }

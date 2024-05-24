@@ -1,15 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from '@prisma/client';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+
 
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   create(@Body() body: CreateEventDto): Promise<Event> {
+    console.log('test');
     return this.eventService.create(body);
   }
 
@@ -19,13 +23,13 @@ export class EventController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventService.findOne(+id);
+  findOne(@Param('id') id: number): Promise<Event> {
+    return this.eventService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventService.update(+id, updateEventDto);
+  update(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<Event> {
+    return this.eventService.update(id, updateEventDto);
   }
 
   @Delete(':id')
