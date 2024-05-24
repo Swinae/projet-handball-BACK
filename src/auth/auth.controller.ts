@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { SignUpSupporterAuthDto } from './dto/signUp-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { ResfreshTokenGuard } from '../guards/RefreshTokenGuard';
+import { RefreshTokenGuard } from './guards/RefreshToken.guard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 import { Users } from '@prisma/client';
 
@@ -60,7 +60,7 @@ export class AuthController {
     }
   }
 
-  @UseGuards(ResfreshTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   @Post('refreshToken')
   async refreshToken(@Request() req: customRequest): Promise<{ user: Users, token: string, refreshToken: string }> {
     try {
