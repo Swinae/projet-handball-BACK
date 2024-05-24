@@ -1,6 +1,6 @@
 import { UserRoleEnum } from "@prisma/client"
 
-export interface RequestWithUser extends Request {
+export interface IRequestWithUser extends Request {
         user : {
             sub: number,
             role: UserRoleEnum

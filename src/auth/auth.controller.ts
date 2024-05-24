@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import { SignUpAuthDto } from './dto/signUp-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshGuard } from './guards/refresh.guard';
-import { RequestWithUser } from 'src/utils/interfaces/requests.interface';
+import { IRequestWithUser } from 'src/utils/interfaces/requests.interface';
 import { Users } from '@prisma/client';
 
 @Controller('auth')
@@ -62,7 +62,7 @@ export class AuthController {
 
     @Post('refreshToken')
     @UseGuards(RefreshGuard)
-    async refreshToken(@Req() req: RequestWithUser) {
+    async refreshToken(@Req() req: IRequestWithUser) {
         const user: Users = await this.userService.findById(req.user.sub) // sub = id du user dans le payload de la request (Cf fonction __createAndUpdatedTokens)
         
         if (user.refreshToken !== req.refreshToken) {
