@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { Users } from '@prisma/client';
 import { CreateAdmin } from './dto/create-admin.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { AdminAuthGuard } from 'src/auth/guards/Admin-auth.guard';
+import { AdminAuthGuard } from 'src/middleware/guards/Admin-auth.guard';
 
 @Controller('user')
 export class UserController {
