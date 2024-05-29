@@ -29,11 +29,13 @@ export class EventController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard, RoleGuard)
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto): Promise<Event> {
     return this.eventService.update(+id, updateEventDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard, RoleGuard)
   remove(@Param('id') id: string): Promise<Event> {
     return this.eventService.delete(+id);
   }
