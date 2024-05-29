@@ -40,7 +40,12 @@ export class NewsService {
   }
 
   async deleteOneNews(id: number) {
-    return await this.prisma.news.delete({ where: { id } })
+    const result =  await this.prisma.news.delete({ where: { id } });
+
+    //call procedure stocked to reset id auto-increment
+    await this.prisma.$executeRaw`CALL ResetAutoIncrement()`;
+
+    return result;
   }
 
   async deleteAllNews() {
