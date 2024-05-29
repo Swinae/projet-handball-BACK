@@ -5,8 +5,9 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from '@prisma/client';
 import { AuthGuard } from 'src/middleware/guards/auth.guard';
 import { RoleGuard } from 'src/middleware/guards/role.guard';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-
+@ApiTags("Event")
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}

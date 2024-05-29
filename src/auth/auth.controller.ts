@@ -6,7 +6,9 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshTokenGuard } from '../middleware/guards/RefreshToken.guard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 import { Users } from '@prisma/client';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags("Auth")
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService, private readonly userService: UserService) { }

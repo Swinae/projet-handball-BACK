@@ -4,7 +4,9 @@ import { Users } from '@prisma/client';
 import { CreateAdmin } from './dto/create-admin.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { AdminAuthGuard } from 'src/middleware/guards/Admin-auth.guard';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags("User")
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService, private readonly authService: AuthService) { }

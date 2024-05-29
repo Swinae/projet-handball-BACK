@@ -6,12 +6,16 @@ import { AdminAuthGuard } from 'src/middleware/guards/Admin-auth.guard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 import { Public } from 'src/customsDecorators/publicDecorator';
 import { UpdateNewsDto } from './dto/update-news.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags("News")
 @UseGuards(AdminAuthGuard)
 @Controller('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) { }
 
+  @ApiOperation({summary:"création d'une actualité"})
+  @ApiResponse({status:200, description:"Contient un objet d'actualité"})
   @Post('create')
   async create(@Body() NewsToCreate: CreateNewsDto, @Req() request: customRequest): Promise<News> {
     try {
@@ -26,6 +30,7 @@ export class NewsController {
     }
   }
 
+  @ApiOperation({summary:"mise à jour d'une actualité"})
   @Put('update/id/:news_id')
   async update(@Param('news_id') news_id: string, @Body() newsToUpdate: UpdateNewsDto): Promise<News> {
     try {
@@ -36,6 +41,7 @@ export class NewsController {
     }
   }
 
+  @ApiOperation({summary:"supppression de toute les actualités"})
   @Delete('delete/all')
   async deleteAll() {
     try {
@@ -54,6 +60,7 @@ export class NewsController {
     }
   }
 
+  @ApiOperation({summary:"supppression d'une actualité"})
   @Delete('delete/:news_id')
   async delelete1News(@Param('news_id') news_id: string): Promise <HttpStatus> {
     try {
@@ -67,7 +74,7 @@ export class NewsController {
     }
   }
 
-
+  @ApiOperation({summary:"récuperer toutes les actualités"})
   @Public()
   @Get('list')
   async findAll(): Promise<News[] | { HttpStatut: HttpStatus, message: string }> {
@@ -85,6 +92,7 @@ export class NewsController {
     }
   }
 
+  @ApiOperation({summary:"récupérer une actualité"})
   @Public()
   @Get('id/:news_id')
   async findOneNews(@Param('news_id') news_id: string): Promise<News | HttpStatus> {
