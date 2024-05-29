@@ -24,17 +24,17 @@ export class EventController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Event> {
-    return this.eventService.findOne(id);
+  findOne(@Param('id') id: string): Promise<Event> {
+    return this.eventService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<Event> {
-    return this.eventService.update(id, updateEventDto);
+  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto): Promise<Event> {
+    return this.eventService.update(+id, updateEventDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<Event> {
-    return this.eventService.delete(id);
+  remove(@Param('id') id: string): Promise<Event> {
+    return this.eventService.delete(+id);
   }
 }
