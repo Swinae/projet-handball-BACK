@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from '@prisma/client';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
+import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 
 
 @Controller('event')
@@ -13,9 +14,9 @@ export class EventController {
 
   @Post()
   @UseGuards(AuthGuard, RoleGuard)
-  create(@Body() body: CreateEventDto): Promise<Event> {
-    console.log('test');
-    return this.eventService.create(body);
+  create(@Body() body: CreateEventDto, @Req() request: customRequest): Promise<Event> {
+    const creator_id = request.user.sub
+    return this.eventService.create(body, creator_id);
   }
 
   @Get()

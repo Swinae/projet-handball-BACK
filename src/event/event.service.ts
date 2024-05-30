@@ -11,8 +11,16 @@ export class EventService {
     constructor(private readonly prisma: PrismaService) { }
 
 
-    async create(data: CreateEventDto): Promise<Event> {
-        return this.prisma.event.create({data})
+    async create(data: CreateEventDto, creator_id: number): Promise<Event> {
+        return this.prisma.event.create(
+            {
+                data: {
+                    ...data,
+                    creator_id
+                } 
+
+            }
+        )
     }
 
     async findAll():Promise<Event[]> {
