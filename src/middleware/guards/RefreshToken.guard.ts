@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
@@ -14,7 +14,6 @@ export class RefreshTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const refreshToken = this.extractTokenFromHeader(request);
-
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
@@ -32,7 +31,10 @@ export class RefreshTokenGuard implements CanActivate {
       request['user'] = payload;
       request.user['refreshToken'] = refreshToken;
     }
-    catch {
+    catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException("refreshToken expired");
+      }
       throw new UnauthorizedException();
     }
     return true;
