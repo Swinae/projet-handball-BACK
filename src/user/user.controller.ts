@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { UserService } from './user.service';
 import { Users } from '@prisma/client';
 import { CreateAdmin } from './dto/create-admin.dto';
-import { AuthService } from 'src/auth/auth.service';
-import { AdminAuthGuard } from 'src/middleware/guards/Admin-auth.guard';
+import { AuthService } from '../../src/auth/auth.service';
+import { AdminAuthGuard } from '../../src/middleware/guards/Admin-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags("User")

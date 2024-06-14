@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { Users } from '@prisma/client';
 import { CreateAdmin } from './dto/create-admin.dto';
 import { SignUpSupporterAuthDto } from 'src/auth/dto/signUp-auth.dto';
@@ -15,7 +15,7 @@ export class UserService {
   }
 
   async createSupporter(data: SignUpSupporterAuthDto): Promise<Users> {
-    return this.prisma.users.create({ data });
+    return await this.prisma.users.create({ data });
   }
 
   findAll() {
