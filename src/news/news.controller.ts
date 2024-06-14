@@ -3,7 +3,7 @@ import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { News } from '@prisma/client';
 import { AdminAuthGuard } from '../../src/middleware/guards/Admin-auth.guard';
-import { customRequest } from '../../src/utils/Interfaces/CustomRequest';
+import { customRequest } from '../../src/utils/interfaces/CustomRequest';
 import { Public } from '../../src/customsDecorators/publicDecorator';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';

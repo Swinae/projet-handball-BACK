@@ -4,7 +4,7 @@ import { UserService } from '../../src/user/user.service';
 import { SignUpSupporterAuthDto } from './dto/signUp-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshTokenGuard } from '../middleware/guards/RefreshToken.guard';
-import { customRequest } from 'src/utils/Interfaces/CustomRequest';
+import { customRequest } from '../../src/utils/interfaces/CustomRequest';
 import { Users } from '@prisma/client';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
