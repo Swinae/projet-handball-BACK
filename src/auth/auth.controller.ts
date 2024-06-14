@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpException, HttpStatus, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../../src/user/user.service';
 import { SignUpSupporterAuthDto } from './dto/signUp-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshTokenGuard } from '../middleware/guards/RefreshToken.guard';
@@ -14,7 +14,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService, private readonly userService: UserService) { }
 
   @Post('signup')
-  async signup(@Body() body: SignUpSupporterAuthDto) {
+  async signup(@Body() body: SignUpSupporterAuthDto):Promise<{user:Users,token:string, refreshToken:string} | HttpException> {
     try {
       // Check if user exist in DB
       const foundUser = await this.userService.findByEmail(body.email)
