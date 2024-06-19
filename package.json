@@ -21,7 +21,7 @@
     "seed:admin": "ts-node ./prisma/seed/seedMainAdmin.ts"
   },
   "prisma": {
-    "seed": "ts-node ./prisma/seed/index.ts"
+    "seed": "ts-node ./prisma/seed/seedEvent.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

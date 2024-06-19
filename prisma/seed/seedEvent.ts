@@ -25,7 +25,7 @@ const main = async () => {
                 img: faker.image.urlLoremFlickr({ category: 'abstract' }),
                 start_time: faker.date.anytime(),
                 end_time: faker.date.anytime(),
-                creator_id: faker.number.int({ max: 42 })
+                creator_id: faker.number.int({ max: 41 })
             }
         });
 

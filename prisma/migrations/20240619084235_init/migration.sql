@@ -76,7 +76,7 @@ CREATE TABLE `Event` (
 
 -- CreateTable
 CREATE TABLE `Match` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `is_home` BOOLEAN NOT NULL DEFAULT true,
     `score_home` TINYINT NOT NULL DEFAULT 0,
     `score_visitor` TINYINT NOT NULL DEFAULT 0,
