@@ -41,6 +41,8 @@ export class AuthController {
     try {
       // Check if user exist in DB
       const foundUser = await this.userService.findByEmail(body.email)
+      console.log("user: ", foundUser);
+      
 
       // If user mail not in DB, throw an error
       if (!foundUser) {
@@ -90,7 +92,7 @@ export class AuthController {
     // Add refresh token to DB
     const user = await this.authService.updateRefreshToken(id, refreshToken)
 
-    // Return into to the front
+    // Return to the front
     return { user, token, refreshToken }
   }
 }

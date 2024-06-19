@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, HttpException, HttpStatus } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -10,18 +10,27 @@ import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 
 @Controller('event')
 export class EventController {
-  constructor(private readonly eventService: EventService) {}
+  constructor(private readonly eventService: EventService) { }
 
   @Post()
   @UseGuards(AuthGuard, RoleGuard)
   create(@Body() body: CreateEventDto, @Req() request: customRequest): Promise<Event> {
-    const creator_id = request.user.sub
-    return this.eventService.create(body, creator_id);
+    try {
+      const creator_id = request.user.sub
+      return this.eventService.create(body, creator_id);
+    } catch (error) {
+      throw new HttpException("Echec, impossible de créer l'événement", HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get()
   findAll(): Promise<Event[]> {
-    return this.eventService.findAll();
+    try {
+      return this.eventService.findAll();
+    } catch (error) {
+      throw new HttpException("Echec, impossible de charger la liste des événements", HttpStatus.BAD_REQUEST);
+    }
+
   }
 
   @Get(':id')
