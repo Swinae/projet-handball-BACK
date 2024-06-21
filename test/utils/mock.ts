@@ -1,4 +1,5 @@
 import { Event } from "@prisma/client"
+import { customRequest } from "src/utils/Interfaces/CustomRequest"
 
 export const prismaMock = {
     event: {
@@ -69,4 +70,45 @@ export const CreateEventMock: Event = {
     updated_at: new Date(),
     creator_id: 1,
     match_id: 1
+}
+
+export const requestMock: customRequest = {
+    user: {
+        sub: 1,
+        role: "ADMIN",
+        refreshToken: "refreshTokenMock"
+    },
+    cache: "default",
+    credentials: "omit",
+    destination: "",
+    headers: undefined,
+    integrity: "",
+    keepalive: false,
+    method: "",
+    mode: "same-origin",
+    redirect: "error",
+    referrer: "",
+    referrerPolicy: "",
+    signal: undefined,
+    url: "",
+    clone: function (): Request {
+        throw new Error("Function not implemented.")
+    },
+    body: undefined,
+    bodyUsed: false,
+    arrayBuffer: function (): Promise<ArrayBuffer> {
+        throw new Error("Function not implemented.")
+    },
+    blob: function (): Promise<Blob> {
+        throw new Error("Function not implemented.")
+    },
+    formData: function (): Promise<FormData> {
+        throw new Error("Function not implemented.")
+    },
+    json: function (): Promise<any> {
+        throw new Error("Function not implemented.")
+    },
+    text: function (): Promise<string> {
+        throw new Error("Function not implemented.")
+    }
 }

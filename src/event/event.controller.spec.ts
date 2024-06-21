@@ -1,100 +1,62 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateEventMock, eventListMock, eventMock, prismaMock } from '../../test/utils/mock';
-import { Event } from '@prisma/client';
-import { PrismaModule } from 'prisma/prisma.module';
+import { EventController } from './event.controller';
+import { JwtService } from '@nestjs/jwt';
+import { eventMock, requestMock } from '../../test/utils/mock';
+
 
 describe('EventController', () => {
-  let eventService: EventService;
-  let findOneMock: jest.Mock
+  let eventController: EventController;
+
+  const mockEventService = {
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn()
+  }
 
   beforeEach(async () => {
-    findOneMock = jest.fn();
-    const module = await Test.createTestingModule({
-      providers: [
-        EventService,
-        {
-          provide: PrismaService,
-          useValue: prismaMock
-        }
-      ]
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [EventController],
+      providers: [{
+        provide: EventService,
+        useValue: mockEventService
+      }, JwtService]
     }).compile()
 
-    eventService = await module.get(EventService)
+    eventController = module.get<EventController>(EventController)
 
-    prismaMock.event.findMany.mockClear()
-    prismaMock.event.findUnique.mockClear()
-    prismaMock.event.create.mockClear()
-    prismaMock.event.update.mockClear()
-    prismaMock.event.delete.mockClear()
-  } )
-
-  describe('When the findOne methode is called', () => {
-    describe('And the findOne methode returns the event', () => {
-      let event: Event;
-      beforeEach(() => {
-        event = eventMock
-        prismaMock.event.findUnique.mockResolvedValue(event)
-      })
-
-      it('Should return the event', async () => {
-        const result = await eventService.findOne(event.id)
-        
-        // On vérifie que le resultat de findOne avec event.id retourne bien l'objet event correspondant
-        expect(result).toBe(event)
-
-        // On vérifie que la méthode findUnique n'a été appelée qu'une seule fois => limite les erreurs si quelqu'un cherche à modifier la fonction dans event.service
-        expect(prismaMock.event.findUnique).toHaveBeenCalledTimes(1)
-
-        // On vérifie que la méthode à bien été appelé avec l'id de l'event (n'a pas été forcé par exemple where: id: 3 ou avec d'autres critères)
-        expect(prismaMock.event.findUnique).toHaveBeenCalledWith({where: {id: event.id}})
-      })
-
-      it('Should return null if event id doesn\'t exist', async () => {
-        prismaMock.event.findUnique.mockResolvedValue(null)
-        const result= await eventService.findOne(0)
-        expect(result).toBe(null)
-      })
-    })
   })
 
-  describe('When the findAll methode is called', () => {
-    describe('And the findAll methode returns every event', () => {
-      let event: Event[];
-      beforeEach(() => {
-        event = eventListMock
-        prismaMock.event.findMany.mockResolvedValue(event)
-      })
-
-      it('Should return the event list', async () => {
-        const result = await eventService.findAll()
-        
-        expect(result).toBe(event)
-
-        expect(prismaMock.event.findMany).toHaveBeenCalledTimes(1)
-      })
-
-    })
+  it('Should be defined', () => {
+    expect(eventController).toBeDefined()
   })
 
-  describe('When the create methode is called', () => {
-    describe('And the create function returns the created event', () => {
-      it('Should return the event', async () => {
-        const event = eventMock
-        prismaMock.event.create.mockResolvedValue(event)
-        const result = await eventService.create(CreateEventMock, CreateEventMock.creator_id)
-        expect(result).toBe(eventMock)
-        expect(prismaMock.event.create).toHaveBeenCalledTimes(1)
-        expect(prismaMock.event.create).toHaveBeenCalledWith({data: CreateEventMock})
-      })
+  describe('When the findOne function is called', () => { 
+    it('findOne => should find an event and return its data', async () => {
+    const event = eventMock
+    
+    jest.spyOn(mockEventService, 'findOne').mockReturnValue(event)
+    
+    const result = await eventController.findOne(event.id.toString())
+    expect(result).toBe(event)
+    expect(mockEventService.findOne).toHaveBeenCalledTimes(1)
+    expect(mockEventService.findOne).toHaveBeenCalledWith(event.id)
+  }) 
+})
+  
 
-      it('Should return {} if event data is null', async () => {
-        prismaMock.event.create.mockResolvedValue({})
-        const result = await eventService.create(null, null)
-        expect(result).toStrictEqual({})
-        expect(prismaMock.event.create).toHaveBeenCalledTimes(1)
-      })
+  describe('When the create function is called', () => {
+    it('Should return the created event', async () => {
+      const event = eventMock
+      const request = requestMock
+      jest.spyOn(mockEventService, 'create').mockReturnValue(event)
+      
+      const result = await eventController.create(event, request)
+      expect(result).toBe(event)
+      expect(mockEventService.create).toHaveBeenCalledTimes(1)
+      expect(mockEventService.create).toHaveBeenCalledWith(event, request.user.sub)
     })
   })
 });
