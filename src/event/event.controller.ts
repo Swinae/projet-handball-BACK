@@ -3,8 +3,8 @@ import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from '@prisma/client';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { RoleGuard } from 'src/auth/guards/role.guard';
+import { AuthGuard } from '../../src/auth/guards/auth.guard';
+import { RoleGuard } from '../../src/auth/guards/role.guard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
 
 

@@ -2,9 +2,9 @@ import { Controller, Post, Body, HttpException, HttpStatus, UseGuards, Req, Put,
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { News } from '@prisma/client';
-import { AdminAuthGuard } from 'src/auth/guards/Admin-auth.guard';
+import { AdminAuthGuard } from '../../src/auth/guards/Admin-auth.guard';
 import { customRequest } from 'src/utils/Interfaces/CustomRequest';
-import { Public } from 'src/customsDecorators/publicDecorator';
+import { Public } from '../../src/customsDecorators/publicDecorator';
 import { UpdateNewsDto } from './dto/update-news.dto';
 
 @UseGuards(AdminAuthGuard)
