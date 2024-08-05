@@ -2,72 +2,130 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<p align="center">
+  <a href="https://www.npmjs.com/package/@nestjs/core" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+  <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+# Night-Watch-Handball
 
 ## Description
+**Night-Watch-Handball** est une application web destinée aux clubs de handball pour partager des actualités et des événements avec leurs supporters. Les administrateurs peuvent gérer les actualités et les événements (CRUD), tandis que les supporters peuvent consulter ces informations.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Technologies Utilisées
+- **Nest.js** en **TypeScript**
+- **Prisma** pour la gestion de la base de données
+- **JWT** pour l'authentification
+- **bcrypt** pour le hashage des mots de passe
+- **Swagger** pour la documentation API
+- **Jest** pour les tests
+
+### Dépendances
+- `@nestjs/common`: ^10.0.0
+- `@nestjs/core`: ^10.0.0
+- `@nestjs/jwt`: ^10.2.0
+- `@nestjs/mapped-types`: *
+- `@nestjs/platform-express`: ^10.0.0
+- `@nestjs/swagger`: ^7.3.1
+- `@prisma/client`: ^5.14.0
+- `bcrypt`: ^5.1.1
+- `class-validator`: ^0.14.1
+- `jsonwebtoken`: ^9.0.2
+- `reflect-metadata`: ^0.2.0
+- `rxjs`: ^7.8.1
 
 ## Installation
 
-```bash
-$ npm install
-```
+Pour installer et configurer le projet, suivez ces étapes :
 
-## Running the app
+1. Clonez le dépôt :
+  ```bash
+  git clone https://github.com/Edan379/Back-club-sportif-handball.git
+  cd Back-club-sportif-handball
+  ```
 
-```bash
-# development
-$ npm run start
+2. Installez les dépendances :
+  ```bash
+  npm install
+  ```
 
-# watch mode
-$ npm run start:dev
+3.  **Configurez les paramètres de connexion de la base de données en créant le fichier `.env` à la racine du projet.**
+  Assurez-vous que toutes les variables nécessaires sont
+  correctement définies.
 
-# production mode
-$ npm run start:prod
-```
+  - Voici un exemple de contenu pour le fichier `.env` :
+    ```plaintext
+    DATABASE_URL=mysql://root:password.@localhost:3306/clubSportif
+    ORIGIN=http://localhost:5173
+    MYSQL_DATABASE=clubSportif
+    MYSQL_ROOT_PASSWORD=password
+    SECRET_KEY=zncvjdkkvdsvbdbvjdsbvsnidndicidckd
+    SECRET_REFRESH_KEY=sdlkvndvnddlvndvvndsjvnjnsdjvnsdvn
+    TOKEN_DURATION=60m
+    REFRESH_TOKEN_DURATION=120m
+    ```
 
-## Test
+  - **Explication des variables :**
+    - **DATABASE_URL** : L'URL de connexion à votre base de données MySQL. Inclut le nom d'utilisateur, le mot de passe, l'hôte et le nom de la base de données (exemple : `mysql://user:password@localhost:3306/database`).
+    - **ORIGIN** : L'origine du front-end (par exemple, `http://localhost:5173` si le front-end est exécuté localement sur ce port).
+    - **MYSQL_DATABASE** : Le nom de la base de données MySQL à utiliser.
+    - **MYSQL_ROOT_PASSWORD** : Le mot de passe de l'utilisateur root pour MySQL.
+    - **SECRET_KEY** : La clé secrète utilisée pour signer les tokens JWT.
+    - **SECRET_REFRESH_KEY** : La clé secrète utilisée pour signer les tokens de rafraîchissement.
+    - **TOKEN_DURATION** : La durée de validité des tokens JWT (par exemple, `60m` pour 60 minutes).
+    - **REFRESH_TOKEN_DURATION** : La durée de validité des tokens de rafraîchissement (par exemple, `120m` pour 120 minutes).
+  **Assurez-vous de ne pas partager ce fichier `.env` publiquement et de garder ces informations confidentielles.**
+  Adaptez les valeurs des variables d'environnement en fonction de votre propre configuration et de vos besoins.
 
-```bash
-# unit tests
-$ npm run test
+4. Exécutez les migrations Prisma et générer le client prisma:
+  ```bash
+  npx prisma migrate dev --name generation-de-la-base-de-donnees
 
-# e2e tests
-$ npm run test:e2e
+  npx prisma generate
+  ```
+  **Note :** Exécutez `npx prisma generate` chaque fois que vous modifiez le fichier `schema.prisma`.
 
-# test coverage
-$ npm run test:cov
-```
+5. Peupler la base de données: 
+  - **avec des utilisateurs admin**:
+  ```bash
+  npm run seed:admin
+  ```
 
-## Support
+  - **avec des actualités**:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+  - **avec des évènements**:
 
-## Stay in touch
+6. Démarrez l'application:
+  - **en mode développement** :
+    ```bash
+    npm run start:dev
+    ```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Utilisation
+- **Pour les tests** :
+  ```bash
+  npm test
+  ```
 
-## License
+- **Pour les tests E2E** :
+  ```bash
+  npm run test:e2e
+  ```
 
-Nest is [MIT licensed](LICENSE).
+## Licence
+
+Ce projet est sous la [Licence Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/).
+
+- **Utilisation** : Vous pouvez utiliser ce code source et le modifier pour des fins personnelles.
+
+- **Interdiction Commerciale** : Vous ne pouvez pas utiliser le code source ou les dérivés du code source à des fins commerciales.
+
+- **Attribution** : Vous devez donner crédit à l'auteur original lorsque vous partagez ou redistribuez le code.
+
+Pour plus d'informations sur cette licence, veuillez consulter [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+
+
+## Auteurs et Remerciements
+
+- **Jordan** - Développeur
+- **Alex** - Collègue Développeur
