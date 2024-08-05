@@ -4,9 +4,7 @@ import { PrismaService } from '../prisma.service';
 import { UserRoleEnum } from '@prisma/client';
 
 const prisma = new PrismaService();
-
 const jwtService = new JwtService();
-
 const authService = new AuthService(jwtService, prisma);
 
 interface Admin {
@@ -17,30 +15,61 @@ interface Admin {
   role: UserRoleEnum;
 }
 
-const admin : Admin = {
-  firstname: "Élise",
-  lastname: "Lefebvre",
-  email: "elise.lefebvre@hotmail.com",
-  password: "azerty01",
-  role: "ADMIN"
-}
+const admins: Admin[] = [
+  {
+    firstname: "Élise",
+    lastname: "Lefebvre",
+    email: "elise.lefebvre@hotmail.com",
+    password: "azerty01",
+    role: "ADMIN"
+  },
+  {
+    firstname: "Jean",
+    lastname: "Dupont",
+    email: "jean.dupont@example.com",
+    password: "password02",
+    role: "ADMIN"
+  },
+  {
+    firstname: "Marie",
+    lastname: "Curie",
+    email: "marie.curie@example.com",
+    password: "password03",
+    role: "ADMIN"
+  },
+  {
+    firstname: "Paul",
+    lastname: "Durand",
+    email: "paul.durand@example.com",
+    password: "password04",
+    role: "ADMIN"
+  }
+];
 
-const createAdmin =  async (admin : Admin) => {
-  //hashed pwd
+// Fonction pour créer un administrateur
+const createAdmin = async (admin: Admin) => {
+  // Hacher le mot de passe
   admin.password = await authService.hashPassword(admin.password);
   
-  // query db to create admin
-  await prisma.users.create({data : admin})
+  // Interroger la base de données pour créer l'administrateur
+  await prisma.users.create({ data: admin });
 
-  console.log("Admin created successfully.");
+  console.log(`Admin ${admin.email} created successfully.`);
 }
 
-createAdmin (admin)
+const createAllAdmins = async () => {
+  for (const admin of admins) {
+    await createAdmin(admin);
+  }
+  console.log('All admins created successfully.');
+}
+
+createAllAdmins()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

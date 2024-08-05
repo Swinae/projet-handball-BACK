@@ -29,6 +29,7 @@ model Users {
   teamComp         Team_Comp[]        @relation("teamComp_users")
   player_supporter Player_Supporter[] @relation("playerSupporter_Users")
   playerSupporter  Player_Supporter[] @relation("playerSupporrter_UsersBis")
+  match            Match[]            @relation("match_users")
 }
 
 model News {
@@ -85,17 +86,19 @@ model Event {
 }
 
 model Match {
-  id            Int          @id
+  id            Int          @id  @default(autoincrement())
   is_home       Boolean      @default(true)
   score_home    Int          @default(0) @db.TinyInt
   score_visitor Int          @default(0) @db.TinyInt
   rival_team    String
   result        matchResultEnum ?
+  creator_id    Int
   created_at    DateTime     @default(now())
   updated_at    DateTime     @default(now())
 
   teamComp Team_Comp[] @relation("teamComp")
   event    Event[]
+  creator Users @relation("match_users", fields: [creator_id], references: [id])
 }
 
 model TeamInfo {
@@ -136,16 +139,16 @@ model Player_Supporter {
 
 model Team_Comp {
   match_id    Int
-  creator_id  Int
+  player_id  Int
   position_id Int
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now()) @updatedAt
 
   match   Match    @relation("teamComp", fields: [match_id], references: [id])
-  creator Users    @relation("teamComp_users", fields: [creator_id], references: [id])
+  player Users    @relation("teamComp_users", fields: [player_id], references: [id])
   poste   Position @relation(fields: [position_id], references: [id])
 
-  @@id([match_id, creator_id, position_id])
+  @@id([match_id, player_id, position_id])
 }
 
 enum UserRoleEnum {

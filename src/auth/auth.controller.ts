@@ -39,7 +39,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: LoginAuthDto): Promise<{ user: object, token: string, refreshToken: string }> {
+  async login(@Body() body: LoginAuthDto): Promise<{ user: Users, token: string, refreshToken: string } | HttpException> {
     try {
       // Check if user exist in DB
       const foundUser = await this.userService.findByEmail(body.email)

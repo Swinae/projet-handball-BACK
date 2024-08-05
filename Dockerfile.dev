@@ -1,0 +1,29 @@
+# syntax=docker/dockerfile:1
+
+ARG NODE_VERSION=18.20.3
+
+# Use node image for base image
+FROM node:${NODE_VERSION}-buster-slim
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Install OpenSSL
+RUN apt-get update -y && apt-get install -y openssl
+
+# copy app source code
+COPY . .
+
+# install app dependencies
+RUN npm install
+
+# generate prisma client
+RUN npx prisma generate
+
+# transpile en js
+RUN npm run build
+
+EXPOSE 3000
+
+# execute app-night_watch-back in dev environemment
+CMD [ "npm", "run", "start:dev" ]

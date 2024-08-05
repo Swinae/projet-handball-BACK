@@ -3,7 +3,13 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors({
+    origin :[process.env.ORIGIN],
+    methods: 'GET,POST',
+    allowedHeaders:'Content-type, Authorization',
+  })
 
   const config = new DocumentBuilder()
     .setTitle('Handball')
