@@ -1,0 +1,41 @@
+services:
+  back:
+    build: 
+      context: .
+    environment:
+      DATABASE_URL: mysql://root:root@db:3306/db_projet_Alt
+      SECRET_KEY: Cju:(mZ*?%-A]j-sd*/{rr8Aa9/RJ'
+      SECRET_REFRESH_KEY: bl9'%s`i&!`NMe`.@:f|,Fq30=tKI}
+      TOKEN_DURATION: 3h
+      REFRESH_TOKEN_DURATION: 3d
+      PORT: 3001
+    depends_on:
+      - db
+    ports:
+      - 3000:3001
+    restart: always
+    networks:
+      - default
+
+  db:
+    image: mysql:lastest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user-password
+      MYSQL_DATABASE: db_projet_Alt
+    ports:
+      - 3307:3306
+    volumes:
+      - db-volume:/var/lib/mysql
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports: 
+      - 8083:80
+    links: 
+      - db
+    environment:
+      - PMA_ARBITRARY=1
+

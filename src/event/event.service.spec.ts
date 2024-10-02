@@ -44,7 +44,7 @@ describe('EventService', () => {
         // On vérifie que la méthode findUnique n'a été appelée qu'une seule fois => limite les erreurs si quelqu'un cherche à modifier la fonction dans event.service
         expect(prismaMock.event.findUnique).toHaveBeenCalledTimes(1)
 
-        // On vérifie que la méthode à bien été appelé avec l'id de l'event (n'a pas été forcé par exemple where: id: 3 ou avec d'autres critères)
+        // On vérifie que la méthode a bien été appelé avec l'id de l'event (n'a pas été forcé par exemple where: id: 3 ou avec d'autres critères)
         expect(prismaMock.event.findUnique).toHaveBeenCalledWith({where: {id: event.id}})
       })
 
