@@ -69,14 +69,14 @@ CREATE TABLE `Event` (
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `creator_id` INTEGER NOT NULL,
-    `match_id` INTEGER NOT NULL,
+    `match_id` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Match` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `is_home` BOOLEAN NOT NULL DEFAULT true,
     `score_home` TINYINT NOT NULL DEFAULT 0,
     `score_visitor` TINYINT NOT NULL DEFAULT 0,
@@ -140,7 +140,7 @@ ALTER TABLE `Donation` ADD CONSTRAINT `Donation_supporter_id_fkey` FOREIGN KEY (
 ALTER TABLE `Event` ADD CONSTRAINT `Event_creator_id_fkey` FOREIGN KEY (`creator_id`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Event` ADD CONSTRAINT `Event_match_id_fkey` FOREIGN KEY (`match_id`) REFERENCES `Match`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Event` ADD CONSTRAINT `Event_match_id_fkey` FOREIGN KEY (`match_id`) REFERENCES `Match`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `User_Position` ADD CONSTRAINT `User_Position_player_id_fkey` FOREIGN KEY (`player_id`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
